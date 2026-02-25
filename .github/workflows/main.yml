@@ -1,0 +1,40 @@
+name: SSHX Run
+
+on:
+  workflow_dispatch: # Manuel tetikleme
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '*/30 * * * *' # Her 30 dakikada bir çalışır (opsiyonel)
+
+jobs:
+  sshx-run:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Install and run SSHX
+      run: |
+        curl -sSf https://sshx.io/get | sh -s run
+    
+    - name: Alternative run with options
+      run: |
+        # SSHX'i yükle
+        curl -sSf https://sshx.io/get -o sshx-install.sh
+        chmod +x sshx-install.sh
+        
+        # İsteğe bağlı parametrelerle çalıştır
+        ./sshx-install.sh run
+        
+        # Veya doğrudan:
+        # curl -sSf https://sshx.io/get | sh -s run --port 8080
+        
+    - name: Run with specific parameters
+      run: |
+        # Port belirterek çalıştırma
+        curl -sSf https://sshx.io/get | sh -s run --port 3000
+        
+        # veya
+        # curl -sSf https://sshx.io/get | sh -s run --name my-session
